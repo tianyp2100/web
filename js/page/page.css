@@ -1,0 +1,8 @@
+@charset "utf-8";
+.page a{text-decoration:none;display:inline-block;line-height:14px;padding:7px 10px;color:#333;border:1px solid #ccc;margin:0 8px;}
+.page a:hover,.page a.on{background:#CA0915;color:#fff;border:1px solid #ca0915;}
+.page a.unclick,.page a.unclick:hover{background:none;border:1px solid #eee;color:#999;cursor:default;}
+.page #goid{width: 60px;text-align: center;padding: 7px 2px;margin-bottom: 3px;}
+.page #gobtn{width: 58px;background: #DDDDDD;text-align: center;}
+.page #gobtn:hover{background: #666;}
+.page a.hide,.page a.hide:hover{display: none;}

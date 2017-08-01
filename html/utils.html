@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Utils测试</title>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/jquery-core/jquery-3.2.1.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/object.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/string.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/date.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/regular.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/biz.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/collection.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/web.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/number.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/cookie.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/cache.utils.js" charset="UTF-8"></script>
+    <script>
+        $(function () {
+            var kaka5 ="  222.02  ";
+            setLocalStorage("lala", "kakakakakak")
+            $("#show1").text(getLocalStorage("lala"))
+        });
+    </script>
+</head>
+<body>
+<span id="show1" style="margin-top: 20px;height: 50px;color: red;font-size: 15px;display: block;"></span>
+<span id="show2" style="margin-top: 20px;height: 50px;color: red;font-size: 15px;display: block;"></span>
+</html>

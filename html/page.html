@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page测试</title>
+    <link rel="stylesheet" type="text/css" href="../page/page.css">
+    <link rel="stylesheet" type="text/css"
+          href="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/nprogress/nprogress.css">
+    <script type="text/javascript"
+            src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/jquery-core/jquery-3.2.1.min.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript"
+            src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/nprogress/nprogress.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript" src="../page/page.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/collection.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/object.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/biz.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/string.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../util/date.utils.js" charset="UTF-8"></script>
+    <style>
+        body {
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        .data_list {
+            margin-top: 50px;
+        }
+
+        #data_page {
+            width: 100%;
+            float: right;
+        }
+
+        p span {
+            padding: 0 8px;
+            border: 1px #cccccc dashed;
+            text-align: center;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div class="data_list"></div>
+<div class="page" id="data_page"></div>
+</body>
+<script>
+    var pageDatas = new Array();
+    var curPage;
+    initDatas();
+
+    //*******分页处理
+    var callbackFlag = false; //第一次不重复请求服务器加载数据
+    var pageSize = 5;  //默认页面大小
+    var curPageIndex;  //当前页码
+    var pageContainerId = "data_page"; //页码容器的id
+    var lock_req = false;   //锁定单一请求，避免重复点击多次请求服务器
+
+    //打开页面加载第一页数据
+    //    loadingDataListSimulateServer(1);  //js模拟请求服务器
+    loadingDataListByAjax(1);   //ajax请求服务器
+
+    function loadingDataListByAjax(pageIndex) {
+        if (curPageIndex === pageIndex) return;
+        curPageIndex = pageIndex;
+        var req_data = {"pageIndex": pageIndex, "pageSize": pageSize};
+        if (lock_req) return false;
+        lock_req = true;
+        $.ajax({
+            url: "http://192.168.1.119:5201/demo1/list.json?time=" + timestampsuffix,
+            type: "post",
+            data: req_data,
+            dataType: "jsonp", //返回JSONP格式的数据，此值固定
+            jsonp: "callback", //回调函数的名字，此值固定
+            timeout: 30000,
+            beforeSend: function () {
+                NProgress.start();
+            },
+            complete: function () {
+                NProgress.done();
+            },
+            success: function (data) {
+                if (isNotNoData(data)) {
+                    if (data.code == 200) {
+                        var container = document.getElementById(pageContainerId);
+                        var totalPage = data.data.totalPage;
+                        var totalCount = data.data.totalCount;
+                        page(container, totalCount, totalPage, pageSize, pageIndex, loadingDataListByAjax, callbackFlag); //实时分页-[第一次]只初始化分页按钮列表,之后回调加载数据和分页
+                        var html = '';
+                        $.each(data.data.datas, function (index, item) {
+                            html += '<p id="' + item.id + '">';
+                            html += '<img style="height: 30px;width: 30px;" src="' + item.avatar + '">';
+                            html += '<span>' + item.compellation + '</span>';
+                            html += '<span>' + item.sex + '</span>';
+                            html += '<span>' + item.age + '</span>';
+                            html += '<span>' + date2string(item.birthday, 1) + '</span>';
+                            html += '<span>' + item.zodiac + '</span>';
+                            html += '<span>' + item.constellation + '</span>';
+                            html += '<span>' + item.bloodType + '</span>';
+                            html += '<span>' + item.birthplace + '</span>';
+                            html += '<span>' + item.eduDegree + '</span>';
+                            html += '<span>' + item.aboutMe + '</span>';
+                            html += '</p>';
+                        });
+                        $(".data_list").html(html);
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("请求服务器失败");
+                }
+                lock_req = false;
+            },
+            error: function () {
+                lock_req = false;
+            }
+        });
+    }
+
+    function loadingDataListSimulateServer(pageIndex) {
+        if (curPageIndex === pageIndex) return;
+        curPageIndex = pageIndex;
+        if (lock_req) return false;
+        lock_req = true;
+        //模拟ajax
+        NProgress.start();
+        sleep(1, function () {
+            var pageIndex = curPageIndex;
+            var pageSize = 5;
+            var resData = getListDate(pageIndex, pageSize);
+            var lists = resData.datas;
+            var totalPage = resData.totalPage;
+            var container = document.getElementById(pageContainerId);
+            var totalCount = resData.totalCount;
+            page(container, totalCount, totalPage, pageSize, pageIndex, loadingDataList, callbackFlag); //实时分页-[第一次]只初始化分页按钮列表,之后回调加载数据和分页
+            var html = '';
+            $.each(lists, function (index, item) {
+                html += '<p>' + item + '</p>';
+            });
+            $(".data_list").html(html);
+            lock_req = false;
+            NProgress.done();
+        });
+    }
+
+    <!--以下为模拟服务器代码-->
+    function initDatas() {
+        $.each(charsTable, function (index, item) {
+            pageDatas.push(item.repeat(80));
+        });
+    }
+    function getListDate(pageIndex, pageSize) {
+        var fromIndex = (pageIndex - 1) * pageSize;
+        var toIndex = pageIndex * pageSize;
+        var countTotal = pageDatas.length;
+        var datas = subArray(pageDatas, fromIndex, toIndex);
+        var totalPage = parseInt(pageSize == 0 ? 1 : (countTotal % pageSize > 0 ? countTotal / pageSize + 1 : countTotal / pageSize));
+        var page = new Object();
+        page.datas = datas;
+        page.totalPage = totalPage;
+        page.totalCount = countTotal;
+        page.pageIndex = pageIndex;
+        page.pageSize = pageSize;
+        page.currentPageDatasCount = datas.length;
+        curPage = page;
+        return page;
+    }
+</script>
+</html>
