@@ -63,7 +63,7 @@
         if (lock_req) return false;
         lock_req = true;
         $.ajax({
-            url: "http://192.168.1.119:5201/demo1/list.json?time=" + timestampsuffix,
+            url: "http://192.168.1.119:5201/note1/userinfo/list.json?time=" + timestampsuffix(),
             type: "post",
             data: req_data,
             dataType: "jsonp", //返回JSONP格式的数据，此值固定
