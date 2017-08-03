@@ -39,7 +39,7 @@ function exeFunc(url, type, async, timeout, dataType, reqData, succFunc, errFunc
 }
 
 /**
- * exeFuncJsonP jsonp请求封装方法
+ * exeFuncJsonP jsonp请求封装方法  --JSONP本质发送数据，使用的"GET"方法
  * @param url 请求地址
  * @param type 请求类型 GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS,TRACE
  * @param async  请求发起类型 同步false,异步true(默认)
@@ -49,7 +49,7 @@ function exeFunc(url, type, async, timeout, dataType, reqData, succFunc, errFunc
  * @param errFunc 请求失败回调方法
  */
 function exeFuncJsonP(url, type, async, timeout, reqData, succFunc, errFunc) {
-    type = (isNoData(type)) ? "POST" : type;
+    type = (isNoData(type)) ? "GET" : type;
     async = isNoData(async) ? true : async;
     reqData = isNoData(reqData) ? {} : reqData;
     timeout = !isNumber() ? 60000 : timeout;
@@ -96,7 +96,7 @@ function ajaxFunc(url, reqData, succFunc, errFunc) {
  * @param succFunc 请求成功回调方法
  */
 function ajaxFuncJsonP(url, reqData, succFunc) {
-    exeFuncJsonP(url, "POST", true, 30000, reqData, succFunc, defErrFunc);
+    exeFuncJsonP(url, "GET", true, 30000, reqData, succFunc, defErrFunc);
 }
 /**
  * ajaxFunc jsonp请求封装方法
@@ -106,7 +106,7 @@ function ajaxFuncJsonP(url, reqData, succFunc) {
  * @param errFunc 请求失败回调方法
  */
 function ajaxFuncJsonP(url, data, succFunc, errFunc) {
-    exeFuncJsonP(url, "POST", true, 30000, data, succFunc, errFunc);
+    exeFuncJsonP(url, "GET", true, 30000, data, succFunc, errFunc);
 }
 
 function defErrFunc() {
