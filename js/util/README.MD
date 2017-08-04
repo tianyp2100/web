@@ -9,6 +9,7 @@
 |collection.utils.js|集合工具
 |cookie.utils.js|Cookie工具
 |date.utils.js|日期工具
+|map.utils.js|键值对map工具
 |number.utils.js|数字工具
 |object.utils.js|对象工具
 |regular.utils.js|正则工具
