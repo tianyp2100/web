@@ -1,5 +1,13 @@
 (function () {
     var parent = window.parent;
+
+    //对于前web和服务器api分离的应用
+    //修改serverUrl后，加载ueditor时用的已经是服务器上的JS文件了，
+    //但parent还是web客户端的，可以在这里把parent打出来看看。
+    //所以虽然已经解决了客户端到服务器的跨域问题，但依然遇到了iframe的跨域问题；
+    //解决：增加域信息
+    //document.domain="loveshare.me";//加一句
+
     //dialog对象
     dialog = parent.$EDITORUI[window.frameElement.id.replace( /_iframe$/, '' )];
     //当前打开dialog的编辑器实例

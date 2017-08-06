@@ -31,7 +31,9 @@
 
         // 服务器统一请求接口路径
         // , serverUrl: URL + "jsp/controller.jsp"
-        , serverUrl: "http://192.168.1.119:5205/note5/ueditor/interface.json"
+        //Ueditor富文本编辑器 ,后台服务器接入接口，支持部分jsonp跨域（未全部支持），建议nginx+路径转发
+        //服务器代码：https://github.com/typa1/spring-boot/tree/master/spring-boot-note5
+        , serverUrl: "http://192.168.2.152:5205/note5/ueditor-interface.json"
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
         , toolbars: [[
