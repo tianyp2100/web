@@ -48,6 +48,7 @@ function isNotEmpty(data) {
  * */
 function isBlank(data) {
     if (isUndefined(data) || isNull(data)) return true;
+    data = data + "";
     data = data.trim();
     return data.length == 0;
 }
