@@ -36,7 +36,7 @@ function isNotUndefined(data) {
  * 空数据
  * */
 function isNoData(data) {
-    return isNull(data) || isUndefined(data) || data == "";
+    return isNull(data) || isUndefined(data) || data === "";
 }
 function isNotNoData(data) {
     return !isNoData(data);

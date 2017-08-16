@@ -111,7 +111,7 @@ function getRelativePath() {
  * 请求参数编码
  * */
 function paramEncode(string) {
-    if (isBlank(string)) {
+    if (isNotBlank(string)) {
         return encodeURIComponent(string);
     }
     return "";

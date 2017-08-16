@@ -31,7 +31,7 @@ function page(container, countTotal, pageTotal, pageSize, pageIndex, callbackFun
     }
 
     //如果没有数据，不实现分页
-    if (isNoData(pageIndex) || isNoData(pageSize) || isNoData(countTotal)) {
+    if (isNoPageData(pageIndex) || isNoPageData(pageSize) || isNoPageData(countTotal)) {
         hidePage(container);
         return false;
     }
@@ -41,7 +41,7 @@ function page(container, countTotal, pageTotal, pageSize, pageIndex, callbackFun
     pageSize = parseInt(pageSize);
     pageIndex = parseInt(pageIndex);
     //总页数为空，则计算
-    if (isNoData(pageTotal)) {
+    if (isNoPageData(pageTotal)) {
         pageTotal = parseInt(pageSize == 0 ? 1 : (countTotal % pageSize > 0 ? countTotal / pageSize + 1 : countTotal / pageSize));
     }
     //特定数据处理
@@ -192,6 +192,6 @@ function hidePage(container) {
 /**
  * 判断数据是否为空
  */
-function isNoData(data) {
+function isNoPageData(data) {
     return data === null || data === "" || typeof(data) === "undefined" || isNaN(data);
 }
