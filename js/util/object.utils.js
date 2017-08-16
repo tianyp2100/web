@@ -33,7 +33,7 @@ function isNotUndefined(data) {
     return !isUndefined(data);
 }
 /**
- * 空数据
+ * 空数据  -- 数据为null或undefined或""，则true
  * */
 function isNoData(data) {
     return isNull(data) || isUndefined(data) || data === "";
