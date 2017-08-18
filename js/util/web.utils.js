@@ -5,12 +5,53 @@
  */
 
 /**
+ * 当前页面的url
+ */
+function currentPageURL() {
+    return window.location.href;
+}
+/**
+ * 获取请求的，协议+域名+端口
+ */
+function domainURL() {
+    var curUrl = window.location.href;
+    var i1 = curUrl.indexOf("://");
+    var tempUrl = curUrl.substring(i1 + 3);
+    return curUrl.substring(0, i1 + 3 + tempUrl.indexOf("/"));
+}
+/**
+ * 获取真实URL地址  --域名之后的数据
+ */
+function getRelativePath() {
+    var strUrl = document.location.toString();
+    var arrObj = strUrl.split("//");
+    return arrObj[1].substring(arrObj[1].indexOf("/"));
+}
+/**
+ * 请求参数编码
+ * */
+function paramEncode(string) {
+    if (isNotBlank(string)) {
+        return encodeURIComponent(string);
+    }
+    return "";
+}
+/**
+ * 请求参数解码
+ * */
+function paramDecode(string) {
+    if (isNotBlank(string)) {
+        return decodeURIComponent(string);
+    }
+    return "";
+}
+/**
  * 获取url中的值
  */
 function getUrlParams(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
-    return r != null ? unescape(r[2]) : null;
+    return r != null ? r[2] : null;
 }
 /**
  * 获取浏览器名称和版本.<br>
@@ -89,32 +130,6 @@ function mobileBrowserVersions() {
 }
 function mobileBrowserLanguage() {
     return (navigator.browserLanguage || navigator.language).toLowerCase();
-}
-/**
- * 获取请求的，协议+域名+端口
- */
-function domainURL() {
-    var curUrl = window.location.href;
-    var i1 = curUrl.indexOf("://");
-    var tempUrl = curUrl.substring(i1 + 3);
-    return curUrl.substring(0, i1 + 3 + tempUrl.indexOf("/"));
-}
-/**
- * 获取真实URL地址  --域名之后的数据
- */
-function getRelativePath() {
-    var strUrl = document.location.toString();
-    var arrObj = strUrl.split("//");
-    return arrObj[1].substring(arrObj[1].indexOf("/"));
-}
-/**
- * 请求参数编码
- * */
-function paramEncode(string) {
-    if (isNotBlank(string)) {
-        return encodeURIComponent(string);
-    }
-    return "";
 }
 /**
  * html转换文本字符串，过滤标签
