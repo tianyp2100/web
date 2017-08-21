@@ -8,35 +8,54 @@
 /**
  * 数组不为空
  * */
-function isNotEmptyArray(array) {
-    if (isNotNoData(array)) {
-        if (array.length > 0) {
-            return true;
-        }
-        return false;
-    }
-    return false;
+Array.prototype.isNotEmpty = function () {
+    return !this.isEmpty();
 }
 /**
  * 数组为空
  * */
-function isEmptyArray(array) {
-    return !isNotEmptyArray(array);
+Array.prototype.isEmpty = function () {
+    if (isNoData(this)) return true;
+    if (this.length > 0) {
+        return false;
+    }
+    return true;
 }
 /**
  * 数组是否含有某个元素
  */
-function containsArray(array, ele) {
-    return $.inArray(ele, array) >= 0;
+Array.prototype.contains = function (ele) {
+    if (isNoData(this)) return false;
+    var flag = false;
+    $.each(this, function (index, item) {
+        if (equals(ele, item)) {
+            flag = true;
+        }
+    });
+    return flag;
+}
+/**
+ * 删除数组指定元素 .<br/>
+ * 注：需求接受操作结果 .<br/>
+ * 例:  memberIds = removeArray(memberIds, id);
+ * */
+Array.prototype.remove = function (ele) {
+    if (isNoData(this)) return false;
+    if (!this.contains(ele)) return false;
+    var removeIndex = -1;
+    $.each(this, function (index, item) {
+        if (equals(ele, item)) {
+            removeIndex = index;
+        }
+    });
+    this.splice(removeIndex, 1);
 }
 /**
  * 数组元素去重加入
  * */
-function uniqPushArray(array, str) {
-    if ($.inArray(str, array) != -1) {
-        return false;
-    }
-    array.push(str);
+Array.prototype.pushUnique = function (ele) {
+    if (isNoData(this)) return false;
+    if (!this.contains(ele)) this.push(ele);
 }
 /**
  * 数组集合转字符串
@@ -44,36 +63,13 @@ function uniqPushArray(array, str) {
  * @param separator 分隔符，例:“,”
  * @return {*}
  */
-function trimArrayBracket(array, separator) {
-    if (isNotEmptyArray(array)) {
-        return array.join(",");
+Array.prototype.toString = function (separator) {
+    if (isNoData(this)) return "";
+    if (isNoData(separator)) separator = ",";
+    if (this.isNotEmpty()) {
+        return this.join(separator);
     }
-    return null;
-}
-/**
- * 键值对map不为空
- * */
-function isNotEmptyMap(map) {
-    return !isEmptyMap(map);
-}
-/**
- * 键值对map为空
- * */
-function isEmptyMap(map) {
-    return mapLength(map) == 0;
-}
-/**
- * 键值对map的长度
- * */
-function mapLength(map) {
-    if (isNoData(map)) return 0;
-    var count = 0;
-    for (var key in map) {
-        if (map.hasOwnProperty(key)) {
-            count = count + 1;
-        }
-    }
-    return count;
+    return "";
 }
 
 /**

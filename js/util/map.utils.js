@@ -75,7 +75,16 @@ Map.prototype.clear = function () {
  */
 Map.prototype.isEmpty = function () {
     if (isNoData(this)) return false;
-    return this.keys().length == 0;
+    return this.size() == 0;
+};
+
+/**
+ * 判断map是否不为空
+ * @returns true 则为空
+ */
+Map.prototype.isNotEmpty = function () {
+    if (isNoData(this)) return false;
+    return !this.isEmpty();
 };
 
 /**
@@ -93,6 +102,7 @@ Map.prototype.size = function () {
  */
 Map.prototype.keys = function () {
     var keys = new Array();
+    if (isNoData(this)) return keys;
     for (var p in this.KVpairs) {
         keys.push(p);
     }
@@ -105,15 +115,10 @@ Map.prototype.keys = function () {
  */
 Map.prototype.values = function () {
     var values = new Array();
-    var keys = this.keyArray();
+    if (isNoData(this)) return values;
+    var keys = this.keys();
     for (var i = 0; i < keys.length; i++) {
         values.push(this.KVpairs[keys[i]]);
     }
     return values;
-}
-/**
- * 判断数据是否为空
- */
-function isNoData(data) {
-    return data === null || data === "" || typeof(data) === "undefined";
 }

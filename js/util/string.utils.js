@@ -104,6 +104,15 @@ String.prototype.trim = function () {
     return this.replace(/(^\s*)|(\s*$)/g, '');
 };
 /**
+ * 删除字符串最后一个字符
+ * @return {string}
+ */
+String.prototype.trimLastOne = function () {
+    if (isNotEmpty(this)) {
+        return this.substring(0, this.length - 1);
+    }
+};
+/**
  * 不区分大小写比较
  *    "AaXy".equalsIgnoreCase("AAXY") = true
  * */
