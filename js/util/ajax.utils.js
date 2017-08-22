@@ -112,3 +112,130 @@ function ajaxFuncJsonP(url, data, succFunc, errFunc) {
 function defErrFunc() {
     alert("请求超时或网络已断开");
 }
+
+var JRSC = {} //json result status code
+
+function JRSCinit() {
+    JRSC["success"] = 200;  //successful
+    JRSC["error"] = 500;  //server error
+    JRSC["valid_failed"] = 400;  //valid failed
+    JRSC["warmtips "] = 800;  //business error tips
+    JRSC["unlogin"] = 801;  //not login
+    JRSC["unauthorized"] = 802; //permission denied
+    JRSC["invalid_data"] = 803; //invalid data
+    JRSC["non_data"] = 804; //non data
+    JRSC["illlegal"] = 805; //illlegal
+}
+
+$(function () {
+    JRSCinit();
+});
+
+function warmtips(flag, msg) {
+    close_warmtips();
+    if (flag === "err") {
+        $("#warmtips").css({"background": "#FFD2D2", "color": "#FF0000"});
+    }
+    if (flag === "warn") {
+        $("#warmtips").css({"background": "#FFFFB3", "color": "#FF8040"});
+    }
+    if (flag === "ok") {
+        $("#warmtips").css({"background": "#D5FFD5", "color": "#008000"});
+    }
+    if (flag === "loading") {
+        $("#warmtips").css({"background": "#C6FFFF", "color": "#8000FF"});
+
+    }
+    $("#warmtips").html(msg);
+    setInterval("close_warmtips()", 8000);
+}
+
+function close_warmtips() {
+    $("#warmtips").text("");
+    $("#warmtips").css({"background": "#FFFFFF", "color": "#FFFFFF"});
+}
+
+/**
+ * Ajax请求 默认请求方式=post，timeout=45s，相应数据类型=json
+ * @param url 请求地址
+ * @param requestData 请求参数
+ * @param successFunc 成功回调方法
+ * @param lockFlag Boolean类型 请求锁定标识, 默认必须是false
+ */
+function ajaxFunc(url, requestData, successFunc, lockFlag) {
+    if (lockFlag) return;
+    lockFlag = true;
+    $.ajax({
+        url: url,
+        type: "POST",
+        timeout: 45000,
+        data: requestData,
+        dataType: "json",
+        beforeSend: function () {
+            NProgress.start();
+        },
+        complete: function () {
+            NProgress.done();
+        },
+        success: function (responseData) {
+            lockFlag = false;
+            parseResponseData(successFunc, responseData);
+        },
+        error: function (responseData) {
+            lockFlag = false;
+            parseResponseData(successFunc, responseData);
+        }
+    });
+}
+/**
+ * 解析ajax请求的相应数据
+ * @param successFunc 成功回调方法
+ * @param responseData 相应数据
+ * @returns {*}
+ */
+function parseResponseData(successFunc, responseData) {
+    var serverErrorMessage = "网络中断或服务器请求超时或正在升级";
+    var jsonResult = new Object();
+    var serverError = {"code": JRSC["error"], "message": serverErrorMessage};
+    try {
+        outPrintln(json2string(responseData));
+        if (isNoData(responseData)) {
+            return serverError;
+        }
+        if (isNotNoData(responseData.code)) {
+            var code = responseData.code;
+            var message = responseData.message;
+            if (code == JRSC["unlogin"]) {
+                unlogin();
+            } else if (code == JRSC["error"]) {
+                warmtips("err", message);
+            } else {
+                successFunc(responseData);
+            }
+        } else if (isNotNoData(responseData.status)) {
+            var status = responseData.status;
+            if (JRSC["valid_failed"] == status) {
+                if (isNoData(responseData.responseJSON.errors)) {
+                    warmtips("err", responseData.responseJSON.message);
+                } else {
+                    var max = parseInt(responseData.responseJSON.errors.length) - 1;
+                    warmtips("err", responseData.responseJSON.errors[max].defaultMessage);
+                }
+            } else if (JRSC["error"] == status) {
+                warmtips("err", serverError);
+            } else {
+                warmtips("err", serverError);
+            }
+        } else {
+            warmtips("err", serverError);
+        }
+    } catch (e) {
+        warmtips("err", serverError);
+    }
+}
+function unlogin() {
+    window.location.href = "../?redirect_url=" + currentPageURL();
+}
+function waitnext() {
+    warmtips("warn", "待开发完善");
+}
