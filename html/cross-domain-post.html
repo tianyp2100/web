@@ -2,9 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>JS跨域POST请求</title>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/jquery-core/jquery-3.2.1.min.js" charset="UTF-8"></script>
+    <script>
+        function send(setting) {
+            var html = '<div style="display: block;">';
+            html += '<form name="js_cross_domain_form" action="' + setting.url + '" method="' + setting.method + '"' +
+                ' enctype="' + (setting.upload ? 'multipart/form-data': 'application/x-www-form-urlencoded') + '"' +
+                ' target="js_cross_domain_iframe">';
+            for (var k in setting.data) {
+                html += '<input type="text" name="' + k + '" value="'+ setting.data[k] +'">';
+            }
+            html += '</form>';
+            html += '<iframe name="js_cross_domain_iframe"  src="javascript:false;" onload="loadIframe(this);"></iframe>';
+            html += '</div>';
+            $("body").append(html);
+            document.getElementsByName("js_cross_domain_form")[0].submit();
+        }
+        function loadIframe(obj){
+            var content = document.getElementsByName("js_cross_domain_iframe")[0].contentWindow;
+//            if(content != null && typeof(content) != "undefined"){
+//                alert(content.body.innerHTML)
+//            }
+
+            // 未全部完成
+        }
+        $(function () {
+            send({
+                "url": "http://192.168.1.119:8688/add.json",
+                "method": "POST",
+                "data":{"a":600,"b":400},
+                "upload": false
+            });
+        });
+    </script>
 </head>
 <body>
-$END$
+<h1>JS跨域POST请求</h1>
 </body>
 </html>
