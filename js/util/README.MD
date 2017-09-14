@@ -19,9 +19,7 @@
 |web.utils.js|网络工具
 
 ### 在js的操作中简化的判断作:
-|数据| 函数判断
-|----|----
-|data| if(data)
+|数据：data| 函数判断：if(data)
 |----|----
 |undefined|false
 |null|false
@@ -38,9 +36,7 @@
 
 ### JavaScript 数据类型：字符串、数字、布尔、数组、对象、Null、Undefined
 
-`
-var a;                // a 为 undefined类型，定义未使用或初始化赋值
-var b = null;         // b 为 undefined类型
-`
+#### var a;                // a 为 undefined类型，定义未使用或初始化赋值
+#### var b = null;         // b 为 undefined类型
 
 ###### GMT create: 2017-07-27 19:37:05
