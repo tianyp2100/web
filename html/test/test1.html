@@ -66,13 +66,18 @@
             "18": "18.gif",
             "19": "19.gif",
         }
-        var data = "> wget https://nginx.org/download/nginx-1.12.0.tar.gz [19]  ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.40.tar.gz";
+        var data = " ===== [10] 效果图 5 [10] ===== ";
         var emojiObjs = [];
         var emojiArray = []
         for (var k in emojis) {
-            var index = data.indexOf("[" + k + "]")
-            if (index >= 0) {
-                emojiArray.push({"index": index, "emoji": k})
+            var dateTemp = data;
+            var fromindex = 0;
+            while(dateTemp.indexOf("[" + k + "]", fromindex) >= 0){
+                var index = dateTemp.indexOf("[" + k + "]", fromindex);
+                if (index >= 0) {
+                    emojiArray.push({"index": index, "emoji": k})
+                    fromindex = index + 4;
+                }
             }
         }
         if (emojiArray.length == 0) {
