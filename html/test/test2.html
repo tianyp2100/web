@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>测试页面</title>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/jquery-core/jquery-3.2.1.min.js" charset="UTF-8"></script>
 </head>
 <body>
-$END$
+<h1 id="h1"></h1>
 </body>
+<script>
+    var str =  "1   23   3121   223";
+//    var resstr = str.replace(/\s/g,'&amp;nbsp;');
+    var resstr = str.replace(/\s/g,'&nbsp;');
+    $("#h1").text(resstr);
+</script>
 </html>
