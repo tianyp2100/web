@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX简化封装</title>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/image/ico/loveshare.ico"/>
+    <link rel="stylesheet" type="text/css" href="../js/plug-in/nprogress/nprogress.css">
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/jquery-core/jquery-3.2.1.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/plug-in/nprogress/nprogress.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/util/ajax.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/util/object.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/util/date.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/util/number.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/util/number.utils.js" charset="UTF-8"></script>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+    }
+
+    .warmtips {
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #FFFFFF;
+        color: #FFFFFF;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        font-family: 'Roboto Slab', 'Monda', "PingFang SC", "Microsoft YaHei", sans-serif;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 15px;
+    }
+
+    .button {
+        cursor: pointer;
+        text-align: center;
+        width: 150px;
+        border: none;
+        background: #0CF;
+        color: #FFF;
+        margin: 0 0 5px;
+        padding: 10px;
+        font-size: 15px;
+        display: inline-block;
+    }
+</style>
+<body>
+<div class="warmtips" id="warmtips" onclick="close_warmtips();"></div>
+<h3 style="color: green;margin-left: 200px;font-size: 20px;">
+    Ajax请求：再封装，简化，统一服务器端响应处理，未登录或通用code统一处理，和响应进度条，提示，重复按钮点击加锁等。</h3>
+<hr>
+<br/>
+<span id="post-span" class="button">发起post请求</span>
+<span id="get-span" class="button">发起get请求</span>
+<br/>
+<textarea id="out" cols="80" rows="15"></textarea>
+<hr>
+<script>
+    //post请求，成功回调独立方法
+    $("#post-span").click(function () {
+        var lock = false;
+        var data = {
+            "pageIndex": 1,
+            "pageSize": 2
+        }
+//        arsd.post('note/list.json', data, info, lock);
+        arsd.postp('note/list.json', data, info, lock);
+    });
+    //get请求，成功回调内部，使用this对象
+    $("#get-span").click(function () {
+        var that = this;
+        var lock = false;
+        var data = {
+            "pageIndex": 1,
+            "pageSize": 2
+        }
+//        arsd.get('note/list.json', data, function (res) {
+        arsd.getp('note/list.json', data, function (res) {
+            $("#out").text(JSON.stringify(res));
+//            alert(that.id)  //that测试
+            $(that).css("color", "#FF8040");
+            $(that).css("background", "#400080");
+        }, lock);
+    });
+    function info(res) {
+        $("#out").text(JSON.stringify(res))
+    }
+
+    $(function () {
+
+//        var ab = new Object();
+//        ab.a1 = "11";
+//        ab.a2 = "22";
+//        ab.a3 = "33";
+//        $.each(ab, function (name, value) {
+//            alert(name + "-" + value);
+//        });
+    })
+</script>
+</body>
+</html>

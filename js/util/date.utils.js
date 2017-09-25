@@ -88,8 +88,12 @@ function dateFormat(date, pattern) {
 function date2timestamp(date) {
     return Date.parse(date);
 }
+/**
+ * 时间戳后缀
+ * @return {number}
+ */
 function timestampsuffix() {
-    return Date.parse(new Date());
+    return Date.parse(new Date().toDateString());
 }
 /**
  * 时间戳转换时间 （just eg:） 1501149953000 -> 2017-07-27 18:05:53

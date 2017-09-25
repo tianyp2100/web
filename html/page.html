@@ -2,17 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Page测试</title>
-    <link rel="stylesheet" type="text/css" href="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/page/page.css">
-    <link rel="stylesheet" type="text/css" href="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/nprogress/nprogress.css">
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/jquery-core/jquery-3.2.1.min.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/nprogress/nprogress.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/page/page.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/collection.utils.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/object.utils.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/biz.utils.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/string.utils.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/date.utils.js" charset="UTF-8"></script>
+    <title>Page分页测试</title>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/image/ico/loveshare.ico"/>
+    <link rel="stylesheet" type="text/css"
+          href="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/page/page.css">
+    <link rel="stylesheet" type="text/css"
+          href="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/nprogress/nprogress.css">
+    <script type="text/javascript"
+            src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/jquery-core/jquery-3.2.1.min.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript"
+            src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/nprogress/nprogress.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/plugins/page/page.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript"
+            src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/collection.utils.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/object.utils.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/biz.utils.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/string.utils.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript" src="http://loveshare.oss-cn-shanghai.aliyuncs.com/universal/util/date.utils.js"
+            charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/util/ajax.utils.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../js/util/number.utils.js" charset="UTF-8"></script>
     <style>
         body {
             width: 1000px;
@@ -54,7 +71,55 @@
 
     //打开页面加载第一页数据
     //    loadingDataListSimulateServer(1);  //js模拟请求服务器
-    loadingDataListByAjax(1);   //ajax请求服务器
+    //    loadingDataListByAjax(1);   //ajax请求服务器
+    loadList(1);   //ajax请求服务器
+
+    // 使用AJAX简化封装
+    function loadList(pageIndex) {
+
+        if (curPageIndex === pageIndex) return;
+        curPageIndex = pageIndex;
+
+        var lock = false;
+        var data = {"pageIndex": pageIndex, "pageSize": pageSize};
+
+        //        arsd.post('note/list.json', data, info, lock);
+        arsd.postp('/test/mi-list.json', data, drawList, lock);
+    }
+
+    function drawList(data) {
+        if (isNotNoData(data)) {
+            if (data.code == 200) {
+                var container = document.getElementById(pageContainerId);
+                var totalPage = data.data.totalPage;
+                var totalCount = data.data.totalCount;
+//                page(container, totalCount, totalPage, pageSize, pageIndex, loadingDataListByAjax, callbackFlag); //实时分页-[第一次]只初始化分页按钮列表,之后回调加载数据和分页
+                page(container, totalCount, totalPage, pageSize, curPageIndex, loadList, callbackFlag); //实时分页-[第一次]只初始化分页按钮列表,之后回调加载数据和分页
+                var html = '';
+                $.each(data.data.datas, function (index, item) {
+                    html += '<p id="' + item.id + '">';
+                    html += '<img style="height: 30px;width: 30px;" src="' + item.avatar + '">';
+                    html += '<span>' + item.compellation + '</span>';
+                    html += '<span>' + item.sex + '</span>';
+                    html += '<span>' + item.age + '</span>';
+                    html += '<span>' + date2string(item.birthday, 1) + '</span>';
+                    html += '<span>' + item.zodiac + '</span>';
+                    html += '<span>' + item.constellation + '</span>';
+                    html += '<span>' + item.bloodType + '</span>';
+                    html += '<span>' + item.birthplace + '</span>';
+                    html += '<span>' + item.eduDegree + '</span>';
+                    html += '<span>' + item.aboutMe + '</span>';
+                    html += '</p>';
+                });
+                $(".data_list").html(html);
+            } else {
+                alert(data.message);
+            }
+        } else {
+            alert("请求服务器失败");
+        }
+    }
+
 
     function loadingDataListByAjax(pageIndex) {
         if (curPageIndex === pageIndex) return;
